@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>jangan di skip ya…</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&family=Great+Vibes&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+
+body{
+  height:100vh;
+  background:black;
+  color:white;
+  font-family:'Poppins',sans-serif;
+  overflow:hidden;
+  text-align:center;
+}
+
+/* layar */
+.screen{
+  position:fixed;
+  width:100%;
+  height:100%;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  flex-direction:column;
+  background:black;
+  transition:1s;
+}
+
+/* hidden */
+.hidden{opacity:0;pointer-events:none;}
+
+/* button */
+button{
+  margin-top:20px;
+  padding:12px 25px;
+  border:none;
+  border-radius:25px;
+  background:#ff4b5c;
+  color:white;
+  font-size:16px;
+}
+
+/* background */
+.bg{
+  position:fixed;
+  width:100%;
+  height:100%;
+  filter:blur(25px) brightness(0.5);
+  background-size:cover;
+  background-position:center;
+  transition:1s;
+}
+
+/* foto */
+#slide{
+  width:260px;
+  height:340px;
+  border-radius:20px;
+  object-fit:cover;
+  box-shadow:0 0 40px rgba(255,255,255,0.6);
+}
+
+/* title */
+.title{
+  font-family:'Great Vibes',cursive;
+  font-size:40px;
+}
+
+/* text */
+.text{
+  max-width:300px;
+  margin:10px auto;
+  min-height:60px;
+}
+
+/* heart */
+.heart{
+  position:absolute;
+  color:red;
+  animation:float 6s linear infinite;
+}
+
+@keyframes float{
+  0%{transform:translateY(100vh);}
+  100%{transform:translateY(-10vh);opacity:0;}
+}
+</style>
+</head>
+
+<body>
+
+<!-- layar 1 -->
+<div class="screen" id="s1">
+  <h2>aku cuma mau kamu baca ini pelan-pelan…</h2>
+  <button onclick="next1()">lanjut ya</button>
+</div>
+
+<!-- layar 2 -->
+<div class="screen hidden" id="s2">
+  <div id="typing"></div>
+  <button onclick="next2()" style="display:none;" id="btn2">lanjut</button>
+</div>
+
+<!-- layar utama -->
+<div class="screen hidden" id="main">
+
+  <div class="bg" id="bg"></div>
+
+  <audio id="music" loop>
+    <source src="https://cdn.pixabay.com/download/audio/2023/03/28/audio_5c9b5bb0e3.mp3">
+  </audio>
+
+  <div class="title">Selamat Ulang Tahun 🎉</div>
+  <img id="slide" src="foto1.jpg.jpeg">
+  <div class="text" id="text"></div>
+
+</div>
+
+<script>
+
+/* pindah layar */
+function next1(){
+  document.getElementById("s1").classList.add("hidden");
+  document.getElementById("s2").classList.remove("hidden");
+  type();
+}
+
+function next2(){
+  document.getElementById("s2").classList.add("hidden");
+  document.getElementById("main").classList.remove("hidden");
+  document.getElementById("music").play();
+}
+
+/* typing deep */
+let words = [
+"jujur ya…",
+"aku gak tau harus mulai dari mana…",
+"tapi sejak kamu hadir…",
+"semua terasa beda ✨",
+"hari-hariku jadi lebih berarti…",
+"dan aku ngerasa beruntung banget bisa kenal kamu 💕",
+"jadi hari ini… aku cuma mau bilang sesuatu…"
+];
+
+let wi=0,ci=0;
+
+function type(){
+  let el=document.getElementById("typing");
+
+  if(ci < words[wi].length){
+    el.innerHTML += words[wi][ci];
+    ci++;
+    setTimeout(type,50);
+  }else{
+    setTimeout(()=>{
+      el.innerHTML+="<br><br>";
+      wi++;
+      ci=0;
+      if(wi < words.length){
+        type();
+      }else{
+        document.getElementById("btn2").style.display="block";
+      }
+    },1200);
+  }
+}
+
+/* foto */
+let images=[
+"foto1.jpg.jpeg","foto2.jpg.jpeg","foto3.jpg.jpeg","foto4.jpg.jpeg","foto5.jpg.jpeg",
+"foto6.jpg.jpeg","foto7.jpg.jpeg","foto8.jpg.jpeg","foto9.jpg.jpeg","foto10.jpg.jpeg",
+"foto11.jpg.jpeg","foto12.jpg.jpeg","foto13.jpg.jpeg","foto14.jpg.jpeg","foto15.jpg.jpeg"
+];
+
+let i=0;
+
+setInterval(()=>{
+  i=(i+1)%images.length;
+  document.getElementById("slide").src=images[i];
+  document.getElementById("bg").style.backgroundImage="url("+images[i]+")";
+},3000);
+
+/* text */
+let msg=[
+"Nazlah Sakinah A ❤️",
+"selamat ulang tahun ya…",
+"semoga kamu selalu bahagia 💖",
+"dan semua impianmu tercapai ✨",
+"aku selalu ada untuk kamu 💘",
+"dan aku sayang kamu… selamanya ❤️"
+];
+
+let mi=0;
+
+setInterval(()=>{
+  document.getElementById("text").innerHTML=msg[mi];
+  mi=(mi+1)%msg.length;
+},3000);
+
+/* heart */
+for(let j=0;j<60;j++){
+  setTimeout(()=>{
+    let h=document.createElement("div");
+    h.className="heart";
+    h.innerHTML="❤️";
+    h.style.left=Math.random()*100+"vw";
+    document.body.appendChild(h);
+    setTimeout(()=>h.remove(),6000);
+  },j*150);
+}
+</script>
+
+</body>
+</html>
