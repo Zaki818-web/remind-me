@@ -4,9 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Untuk Kamu 💖</title>
+<title>Special For You 💖</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+<!-- FONT ELEGAN -->
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&family=Poppins:wght@300;400&display=swap" rel="stylesheet">
 
 <style>
 body{
@@ -26,11 +27,14 @@ body{
   padding:20px;
   border-radius:20px;
   text-align:center;
-  box-shadow:0 10px 30px rgba(0,0,0,0.2);
+  box-shadow:0 15px 40px rgba(0,0,0,0.2);
 }
 
 h2{
-  font-weight:600;
+  font-family:'Playfair Display',serif;
+  font-size:22px;
+  margin-bottom:10px;
+  color:#ff4d6d;
 }
 
 button{
@@ -47,23 +51,15 @@ img{
   width:100%;
   margin-top:15px;
   border-radius:15px;
+
   opacity:0;
-  transform:scale(0.95);
-  transition:0.8s ease;
+  transform:scale(1.03);
+  transition:opacity 0.8s ease, transform 0.8s ease;
 }
 
 .show{
   opacity:1 !important;
   transform:scale(1) !important;
-}
-
-/* TEKS ROMANTIS */
-#text{
-  margin-top:10px;
-  font-size:14px;
-  color:#444;
-  min-height:60px;
-  line-height:1.5;
 }
 </style>
 </head>
@@ -71,19 +67,11 @@ img{
 <body>
 
 <div class="card">
-  <h2>💌 Special For You</h2>
-
+  <h2>💌 Special Moment</h2>
   <button onclick="start()">Buka 💖</button>
-
-  <div id="text"></div>
 
   <img id="foto">
 </div>
-
-<!-- MUSIC -->
-<audio id="music" loop>
-  <source src="lagu.mp3" type="audio/mpeg">
-</audio>
 
 <script>
 
@@ -93,92 +81,59 @@ const images=[
 "foto11","foto12","foto13","foto14","foto15"
 ];
 
-const messages=[
-"aku nggak tau harus mulai dari mana...",
-"tapi hari ini aku cuma mau kamu tahu satu hal...",
-"kamu itu berarti banget buat aku.",
-"bukan karena kamu sempurna...",
-"tapi karena kamu selalu jadi alasan aku tenang.",
-"setiap hari aku bersyukur pernah kenal kamu.",
-"walaupun kita nggak selalu sempurna...",
-"tapi aku selalu mau ada di sisi kamu.",
-"kalau dunia lagi nggak baik ke kamu...",
-"aku harap kamu ingat kalau aku selalu di sini.",
-"selamat ulang tahun ya ❤️",
-"semoga semua yang kamu mau pelan-pelan tercapai.",
-"dan semoga kamu nggak pernah merasa sendirian lagi.",
-"aku mungkin nggak selalu bisa sempurna...",
-"tapi aku selalu mau berusaha buat kamu."
-];
+let index=0;
+let img=document.getElementById("foto");
 
-let i=0;
-let t=0;
-
-let music=document.getElementById("music");
+/* 🔥 PRELOAD (INI KUNCI ANTI GLITCH) */
+const preload=[];
+images.forEach(n=>{
+  ["jpg","jpeg","JPG"].forEach(ext=>{
+    let i=new Image();
+    i.src=n+"."+ext;
+    preload.push(i);
+  });
+});
 
 function start(){
-
   document.querySelector("button").style.display="none";
-
-  music.play();
-
   showImage();
-  typeText();
 
   setInterval(()=>{
-    i++;
-    if(i>=images.length) i=0;
+    index++;
+    if(index>=images.length) index=0;
     showImage();
-  },2500);
-
-  setInterval(()=>{
-    t++;
-    if(t>=messages.length) t=0;
-    typeText();
-  },4000);
+  },3000);
 }
 
-/* FOTO */
 function showImage(){
-  let img=document.getElementById("foto");
   img.classList.remove("show");
 
   setTimeout(()=>{
-    load(img,images[i],0);
-  },200);
+    loadImage(images[index]);
+  },150);
 }
 
-/* AUTO DETECT */
-function load(img,name,step){
+/* AUTO DETECT + STABIL */
+function loadImage(name){
   const ext=[".jpg",".jpeg",".JPG"];
-
-  if(step>=ext.length) return;
-
-  img.src=name+ext[step];
-
-  img.onload=()=>{
-    img.classList.add("show");
-  }
-
-  img.onerror=()=>{
-    load(img,name,step+1);
-  }
-}
-
-/* TEKS NGETIK */
-function typeText(){
-  let el=document.getElementById("text");
-  el.innerHTML="";
-  let word=messages[t];
   let i=0;
 
-  let typing=setInterval(()=>{
-    el.innerHTML+=word[i];
-    i++;
-    if(i>=word.length){
-      clearInterval(typing);
+  function tryLoad(){
+    if(i>=ext.length) return;
+
+    img.src=name+ext[i];
+
+    img.onload=()=>{
+      img.classList.add("show");
     }
-  },40);
+
+    img.onerror=()=>{
+      i++;
+      tryLoad();
+    }
+  }
+
+  tryLoad();
 }
 
 </script>
